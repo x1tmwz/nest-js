@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class IntimidatorsUser {
@@ -17,10 +17,10 @@ export class IntimidatorsUser {
   @Column('int')
   tentacles: number;
 
-  @Column('timestamp')
-  date: string;
+  @CreateDateColumn()
+  date:string
 
-  @Column('varchar', { length: 500 })
+  @Column('varchar', { length: 150 })
   password: string;
 }
 
