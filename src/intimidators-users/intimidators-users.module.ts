@@ -8,5 +8,6 @@ import { IntimidatorsUser } from './entities/intimidators-user.entity';
   imports: [TypeOrmModule.forFeature([IntimidatorsUser])],
   controllers: [IntimidatorsUsersController],
   providers: [IntimidatorsUsersService],
+  exports:[IntimidatorsUsersService]
 })
 export class IntimidatorsUsersModule {}

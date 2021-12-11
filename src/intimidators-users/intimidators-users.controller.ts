@@ -8,7 +8,7 @@ export class IntimidatorsUsersController {
 
   @Post()
   async create(@Body() createIntimidatorsUserDto: IntimidatorsUser) {
-    console.log(createIntimidatorsUserDto)
+    await this.intimidatorsUsersService.create(createIntimidatorsUserDto);
     return {body:"ok"}
 
     //return this.intimidatorsUsersService.create(createIntimidatorsUserDto);
