@@ -95,20 +95,28 @@ export class IntimidatorsUsersService {
     this.validateTentacles(createIntimidatorsUserDto.tentacles);
     this.validateFullName(createIntimidatorsUserDto.fullName);
     const password = await bcrypt.hash(createIntimidatorsUserDto.password, 8);
+    const isUserNameAlreadyTaken =await this.findUserName(createIntimidatorsUserDto.userName);
+    if(isUserNameAlreadyTaken){
+      throw new BadRequestException(
+        'User name already exiting',
+      );
+    }
     const user = await this.IntimidatorsUserRepository.create({
       ...createIntimidatorsUserDto,
       password
     });
-    console.log(user)
-    return user;
+    return this.IntimidatorsUserRepository.save(user);
   }
 
   findAll(): Promise<IntimidatorsUser[]> {
     return this.IntimidatorsUserRepository.find();
   }
 
-  findOne(userName: string): Promise<IntimidatorsUser> {
-    return this.IntimidatorsUserRepository.findOne(userName);
+  findOne(id: string): Promise<IntimidatorsUser> {
+    return this.IntimidatorsUserRepository.findOne(id);
+  }
+  findUserName(userName:string):Promise<IntimidatorsUser>{
+    return this.IntimidatorsUserRepository.findOne({where:{userName}})
   }
 
   async remove(id: string): Promise<void> {
