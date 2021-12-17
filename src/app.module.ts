@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { IntimidatorsUsersModule } from './intimidators-users/intimidators-users.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: ['.dev.env'],
     }),
     TypeOrmModule.forRoot(),
+    AuthModule,
     IntimidatorsUsersModule,
   ],
   controllers: [],

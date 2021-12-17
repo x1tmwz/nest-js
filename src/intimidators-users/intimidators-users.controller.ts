@@ -1,25 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  UnauthorizedException
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { IntimidatorsUsersService } from './intimidators-users.service';
 import { IntimidatorsUser } from './entities/intimidators-user.entity';
 
 @Controller('intimidators-users')
 export class IntimidatorsUsersController {
-  constructor(private readonly intimidatorsUsersService: IntimidatorsUsersService) {}
+  constructor(
+    private readonly intimidatorsUsersService: IntimidatorsUsersService,
+  ) {}
 
   @Post()
   async create(@Body() createIntimidatorsUserDto: IntimidatorsUser) {
-    const user = await this.intimidatorsUsersService.create(createIntimidatorsUserDto);
-    return {body:"ok"}
-
-    //return this.intimidatorsUsersService.create(createIntimidatorsUserDto);
+    await this.intimidatorsUsersService.create(
+      createIntimidatorsUserDto,
+    );
+    return { body: 'ok' };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.intimidatorsUsersService.findOne(id);
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  findOne(@Request() req) {
+    return this.intimidatorsUsersService.findOne(req.user.userId);
   }
-
-
-
-  
 }
