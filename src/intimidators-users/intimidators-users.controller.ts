@@ -3,10 +3,8 @@ import {
   Get,
   Post,
   Body,
-  Param,
   UseGuards,
   Request,
-  UnauthorizedException
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { IntimidatorsUsersService } from './intimidators-users.service';

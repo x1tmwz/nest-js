@@ -10,13 +10,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(user:{userName: string, pass: string}): Promise<any> {
-    if(!user.userName || !user.pass){
+  async validateUser(user: { userName: string; pass: string }): Promise<any> {
+    if (!user.userName || !user.pass) {
       return null;
     }
-    const foundUser = await this.intimidatorsUsersService.findUserName(user.userName);
+    const foundUser = await this.intimidatorsUsersService.findUserName(
+      user.userName,
+    );
     if (foundUser && foundUser.password) {
-      const isMatchPasswords = await bcrypt.compare(user.pass, foundUser.password);
+      const isMatchPasswords = await bcrypt.compare(
+        user.pass,
+        foundUser.password,
+      );
       if (isMatchPasswords) {
         return foundUser;
       }
@@ -24,12 +29,16 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any):Promise<{ access_token?: string; msg?: string; }> {
-    const validUser =await this.validateUser(user);
-    if(!validUser){
-      return {msg:"User name or password is wrong"}
+  async login(user: any): Promise<{ access_token?: string; msg?: string }> {
+    const validUser = await this.validateUser(user);
+    if (!validUser) {
+      return { msg: 'User name or password is wrong' };
     }
-    const payload = { userName: validUser.userName, sub: validUser.id };
+    const payload = {
+      userName: validUser.userName,
+      sub: validUser.id,
+      join: new Date(validUser.date).getTime(),
+    };
     return { access_token: this.jwtService.sign(payload) };
   }
 }
