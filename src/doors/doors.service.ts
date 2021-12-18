@@ -44,15 +44,5 @@ export class DoorsService {
     return this.DoorsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} door`;
-  }
-
-  update(id: number, updateDoorDto: UpdateDoorDto) {
-    return `This action updates a #${id} door`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} door`;
-  }
+  
 }

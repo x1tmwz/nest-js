@@ -11,22 +11,22 @@ export class WorkDayController {
   
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Request() req,@Body() createWorkDayDto: CreateWorkDayDto) {
+  create(@Body() createWorkDayDto: CreateWorkDayDto) {
     return this.workDayService.create(createWorkDayDto);
   }
 
   
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get("/work-enegry")
   getTodayEnergy(@Request() req){
     return this.workDayService.getMyTodayExperience(req.userId);
   }
 
   
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get("/doors")
   getWorkDayDoors(@Request() req){
-    return this.workDayService.getOpenWorkDayDoors(req.userId,req.exp);
+    return this.workDayService.getOpenWorkDayDoors(req.user.userId,req.user.join);
   }
 
   @UseGuards(JwtAuthGuard)

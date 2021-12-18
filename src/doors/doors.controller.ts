@@ -5,10 +5,20 @@ import { UpdateDoorDto } from './dto/update-door.dto';
 
 @Controller('doors')
 export class DoorsController {
-  constructor(private readonly doorsService: DoorsService) {}
+  constructor(private readonly doorsService: DoorsService) { }
 
   @Post()
-  create(@Body() createDoorDto: CreateDoorDto) {
-    return this.doorsService.create(createDoorDto);
+  create() {
+    const doors = [
+      { name: "Door 1" },
+      { name: "Door 2" },
+      { name: "Door 3" },
+      { name: "Door 4" },
+      { name: "Door 5" },
+      { name: "Door 6" },
+      { name: "Door 7" },
+    ]
+    return this.doorsService.createMany(doors);
   }
+
 }

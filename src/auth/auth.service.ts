@@ -10,8 +10,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(user: { userName: string; pass: string }): Promise<any> {
-    if (!user.userName || !user.pass) {
+  async validateUser(user: { userName: string; password: string }): Promise<any> {
+    if (!user.userName || !user.password) {
       return null;
     }
     const foundUser = await this.intimidatorsUsersService.findUserName(
@@ -19,7 +19,7 @@ export class AuthService {
     );
     if (foundUser && foundUser.password) {
       const isMatchPasswords = await bcrypt.compare(
-        user.pass,
+        user.password,
         foundUser.password,
       );
       if (isMatchPasswords) {
