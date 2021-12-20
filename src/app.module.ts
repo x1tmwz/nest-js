@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { DoorsModule } from './doors/doors.module';
 import { WorkDayModule } from './work-day/work-day.module';
 import { UtilsModule } from './utils/utils.module';
+import { WorkDaySummaryModule } from './work-day-summary/work-day-summary.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UtilsModule } from './utils/utils.module';
     IntimidatorsUsersModule,
     DoorsModule,
     WorkDayModule,
+    WorkDaySummaryModule
   ],
   controllers: [],
   providers: [],
