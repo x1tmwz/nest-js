@@ -12,7 +12,7 @@ export class WorkDayService {
     @InjectRepository(WorkDay) private WorkDayRepository: Repository<WorkDay>,
     private UtilsService: UtilsService,
     private DoorsService: DoorsService,
-  ) { }
+  ) {}
 
   private async getExperience(monsterId: string, start: number, end: number) {
     return this.WorkDayRepository.query(
@@ -21,8 +21,11 @@ export class WorkDayService {
     );
   }
   private getMonsterExperienceBaseOnJoin(join: number) {
-    const years = this.UtilsService.getYearsFromDateRange(join, new Date().getTime())
-    let exp = 100
+    const years = this.UtilsService.getYearsFromDateRange(
+      join,
+      new Date().getTime(),
+    );
+    let exp = 100;
     if (years <= 1) {
       return exp;
     }
@@ -31,36 +34,41 @@ export class WorkDayService {
     }
     return exp;
   }
-  
-  private async isDoorAlreadyBeenVisitByMonster(workDay:CreateWorkDayDto){
-    const {start,end} = this.UtilsService.generateTodayRange()
-    console.log(new Date(start*1000).toISOString(),new Date(end*1000).toISOString())
-    const findWorkDay = await this.WorkDayRepository.findOne({
-      where:{
-        date:Between(new Date(start*1000).toLocaleString(),new Date(end*1000).toLocaleString()),
-        monster:workDay.monster,
-        door:workDay.door
-      }
-    })
-    console.log(findWorkDay)
+
+  private isDoorAlreadyBeenVisitByMonster(
+    workDay: CreateWorkDayDto,
+  ) {
+    const { start, end } = this.UtilsService.generateTodayRange();
+    return this.WorkDayRepository.findOne({
+      where: {
+        date: Between(
+          new Date(start * 1000).toISOString(),
+          new Date(end * 1000).toISOString(),
+        ),
+        door: workDay.door,
+      },
+    });
+    
   }
-  private validateWorkDay(workDay:CreateWorkDayDto){
-    if(!workDay.door || !workDay.monster){
-      throw new BadRequestException("Please send monster:id an door:id")
+  private validateWorkDay(workDay: CreateWorkDayDto) {
+    if (!workDay.door) {
+      throw new BadRequestException('Please send door:id');
     }
-
   }
 
-  async create(createWorkDayDto: CreateWorkDayDto) {
-    this.validateWorkDay(createWorkDayDto)
-    await this.isDoorAlreadyBeenVisitByMonster(createWorkDayDto)
-    // const workDay = this.WorkDayRepository.create(createWorkDayDto);
-    // try {
-    //   await this.WorkDayRepository.save(workDay);
-    //   return 'This action adds a new workDay';
-    // } catch (e) {
-    //   return e.message;
-    // }
+  async create(monsterId:number, createWorkDayDto: CreateWorkDayDto) {
+    this.validateWorkDay(createWorkDayDto);
+    const door = (await this.isDoorAlreadyBeenVisitByMonster(createWorkDayDto));
+    if(door){
+      return "Sorry this door already taken"
+    }
+    const workDay = this.WorkDayRepository.create({monster:monsterId,door:createWorkDayDto.door});
+    try {
+      await this.WorkDayRepository.save(workDay);
+      return 'This action adds a new workDay';
+    } catch (e) {
+      return e.message;
+    }
   }
 
   getMyTodayExperience(monsterId: string) {
@@ -70,13 +78,9 @@ export class WorkDayService {
 
   async getOpenWorkDayDoors(monsterId: string, monsterJoin: number) {
     const { start, end } = this.UtilsService.generateTodayRange();
-    const monsterExp = this.getMonsterExperienceBaseOnJoin(monsterJoin)
+    const monsterExp = this.getMonsterExperienceBaseOnJoin(monsterJoin);
     try {
-      const { exp } = (await this.getExperience(
-        monsterId,
-        start,
-        end,
-      ))[0];
+      const { exp } = (await this.getExperience(monsterId, start, end))[0];
       const msg = `You gain ${exp} / ${monsterExp} energy units for today`;
       if (exp >= monsterExp) {
         return { doors: [], msg };
@@ -84,7 +88,6 @@ export class WorkDayService {
       const doors = await this.DoorsService.findWorkDayDoors(start, end);
       return { doors, msg };
     } catch (e) {
-      console.log(e);
       return e.code;
     }
   }
@@ -114,6 +117,5 @@ export class WorkDayService {
     isAccomplishDailyGoal?: boolean;
   }) {
     filters = this.validateAndAdjustmentFilters(filters);
-
   }
 }
