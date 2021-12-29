@@ -1,22 +1,33 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class IntimidatorsUser {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('varchar', { length: 200 })
+  @Column('varchar', { length: 100, unique: true })
+  userName: string;
+
+  @Column('varchar', { length: 100 })
   fullName: string;
 
   @Column('varchar', { length: 10 })
   phone: string;
 
-  @Column('int', { width: 3 })
+  @Column('int')
   tentacles: number;
 
-  @Column('timestamp')
-  date: string;
+  @CreateDateColumn()
+  date:string
 
-  @Column('varchar', { length: 150, })
+  @Column('varchar', { length: 150 })
   password: string;
 }
+
+export const fullKeyList = [
+  'userName',
+  'fullName',
+  'phone',
+  'tentacles',
+  'password',
+];
